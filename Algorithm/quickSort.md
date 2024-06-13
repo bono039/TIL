@@ -1,4 +1,4 @@
-#  정렬
+#  퀵 정렬
 
 > 🔗 출처 : https://gyoogle.dev/blog/algorithm/Quick%20Sort.html
 >
@@ -50,17 +50,33 @@ public void quickSort(int[] arr, int left, int right) {
 <br/>
 
 - 분할 (Conquer)
-  - 부분 배열을 정렬한다. 부분 배열의 크기가 충분히 작지 않다면, 순환 호출을 이용해 다시 분할 정복한다.
+  - pivot을 기준으로 입력 배열을 비균등하게 2개의 부분 배열로 분할한다.<br/>
+    → 피벗 중심 [왼쪽/오른쪽] : 피벗보다 [작은/큰] 요소들
+    
 ```java
-public void quickSort(int[] arr, int left, int right) {
-    if(left >= right) return;
+public int partition(int[] arr, int left, int right) {
+    /**
+    // 최악의 경우, 개선 방법
+    int mid = (left + right) / 2;
+    swap(array, left, mid);
+    */
     
-    // 분할 
-    int pivot = partition(); 
+    int pivot = arr[left]; // 가장 왼쪽값을 피벗으로 설정
+    int i = left, j = right;
     
-    // 피벗은 제외한 2개의 부분 배열을 대상으로 순환 호출
-    quickSort(arr, left, pivot-1);  // 정복 (Conquer)
-    quickSort(arr, pivot+1, right); // 정복 (Conquer)
+    while(i < j) {
+        while(pivot < arr[j]) {
+            j--;
+        }
+        while(i < j && pivot >= arr[i]){
+            i++;
+        }
+        swap(arr, i, j);
+    }
+    arr[left] = array[i];
+    arr[i] = pivot;
+    
+    return i;
 }
 
 ```
@@ -68,8 +84,15 @@ public void quickSort(int[] arr, int left, int right) {
 <br/>
 
 ## 시간 복잡도
-- 최악 - 역으로 정렬된 경우 : <b>O(N^2)</b> = (n-1) + (n-2) + .... + 2 + 1 ⇒ n(n-1)/2
-- 최선 - 모두 정렬된 경우 : <b>O(N)</b>
+- 최악 - <code><b>T(n) = O(n^2)</b></code>
+  * WHEN? 배열이 오름차순/내림차순 정렬되어 있는 경우
+  * 비교 횟수 (= 순환 호출의 깊이) : [<code>n</code>](https://github.com/GimunLee/tech-refrigerator/raw/master/Algorithm/resources/quick-sort-003.png)
+  * 각 순환 호출 단계에서의 비교 연산 : <code>n</code>
+- 최선 - <code><b>T(n) = O(nlog₂n)</b></code>
+  * 비교 횟수 (= 순환 호출의 깊이) : [<code>log₂n</code>](https://github.com/GimunLee/tech-refrigerator/raw/master/Algorithm/resources/quick-sort-002.png)
+  * 각 순환 호출 단계에서의 비교 연산 : <code>n</code>
+- 평균 : <code>T(n) = O(nlog₂n)</code>
+
 
 <br/>
 
@@ -80,14 +103,11 @@ public void quickSort(int[] arr, int left, int right) {
 
 ## 장단점
 * 장점
-   * 가장 빠른 정렬 알고리즘!
+   * 가장 빠른 정렬 알고리즘! (불필요한 데이터 이동 줄이고 먼 거리 데이터 교환할 뿐만 아니라, 한 번 결정된 pivot들이 추후 연산에서 제외되므로)
    * 다른 메모리 공간 불필요 ⇒ 제자리(in-place) 정렬
-   * <b>안정(stable) 정렬</b>
-   * 대부분의 원소가 이미 정렬되어 있는 경우, 매우 효율적
-   * 버블 정렬, 선택 정렬 比 상대적으로 빠름
 
 * 단점
-  * 불안정 정렬
+  * <b>불안정 정렬</b>
   * 정렬된 배열에서는 퀵 정렬 시 오히려 수행시간이 더 오래 걸린다. (∵ 불균형 분할)
 
 <br/>
