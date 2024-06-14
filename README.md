@@ -12,3 +12,7 @@
 * [힙 정렬](https://github.com/bono039/TIL/blob/main/Algorithm/heapSort.md)
 <br/>
 
+
+## Data Structure
+* [선형 자료구조]   &nbsp;&nbsp;&nbsp;&nbsp;배열, 연결 리스트, 스택, 큐
+* [비선형 자료구조] 그래프, 트리, 우선순위 큐, 힙, 해시 테이블
