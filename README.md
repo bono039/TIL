@@ -7,7 +7,8 @@
 * [버블 정렬](https://github.com/bono039/TIL/blob/main/Algorithm/bubbleSort.md)
 * [선택 정렬](https://github.com/bono039/TIL/blob/main/Algorithm/selectionSort.md)
 * [삽입 정렬](https://github.com/bono039/TIL/blob/main/Algorithm/insertionSort.md)
-
-
+* [퀵 정렬](https://github.com/bono039/TIL/blob/main/Algorithm/quickSort.md)
+* [병합 정렬](https://github.com/bono039/TIL/blob/main/Algorithm/mergeSort.md)
+* [힙 정렬](https://github.com/bono039/TIL/blob/main/Algorithm/heapSort.md)
 <br/>
 
