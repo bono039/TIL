@@ -102,7 +102,7 @@ public class Linear_Queue {
 <br/>
 
 ## 시간 복잡도
-- <b>O(dn))</b>
+- <b>O(dn)</b>
 ⇒ <b>d</b> : 정렬할 숫자의 자릿수 / <b>n</b> : 정렬될 수의 갯수
 
 <br/>
