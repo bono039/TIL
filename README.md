@@ -11,6 +11,8 @@
 * [병합 정렬](https://github.com/bono039/TIL/blob/main/Algorithm/mergeSort.md)
 * [힙 정렬](https://github.com/bono039/TIL/blob/main/Algorithm/heapSort.md)
 * [기수 정렬](https://github.com/bono039/TIL/blob/main/Algorithm/radixSort.md)
+* [계수 정렬](https://github.com/bono039/TIL/blob/main/Algorithm/countingSort.md)
+* [이분 탐색](https://github.com/bono039/TIL/blob/main/Algorithm/binarySearch.md)
 <br/>
 
 
