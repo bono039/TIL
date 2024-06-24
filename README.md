@@ -13,6 +13,9 @@
 * [기수 정렬](https://github.com/bono039/TIL/blob/main/Algorithm/radixSort.md)
 * [계수 정렬](https://github.com/bono039/TIL/blob/main/Algorithm/countingSort.md)
 * [이분 탐색](https://github.com/bono039/TIL/blob/main/Algorithm/binarySearch.md)
+* [DFS  & BFS](https://github.com/bono039/TIL/blob/main/Algorithm/dfsBfs.md)
+* [최장 증가 부분 수열 (LIS)](https://github.com/bono039/TIL/blob/main/Algorithm/LIS.md)
+* [최소 공통 조상 (LCA)](https://github.com/bono039/TIL/blob/main/Algorithm/LCA.md)
 <br/>
 
 
