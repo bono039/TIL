@@ -17,6 +17,7 @@
 * [최장 증가 부분 수열 (LIS)](https://github.com/bono039/TIL/blob/main/Algorithm/LIS.md)
 * [최소 공통 조상 (LCA)](https://github.com/bono039/TIL/blob/main/Algorithm/LCA.md)
 * [DP](https://github.com/bono039/TIL/blob/main/Algorithm/dp.md)
+* [다익스트라](https://github.com/bono039/TIL/blob/main/Algorithm/dijkstra.md)
 
 <br/>
 
