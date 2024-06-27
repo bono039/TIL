@@ -66,13 +66,13 @@ for(int i = 1 ; i <= V ; i++) {
   graph[i] = new ArrayList<>();
 }
 ```
-2. 최단 거리 배열 값은 무한대로 초기화한다.
+3. 최단 거리 배열 값은 무한대로 초기화한다.
 ```java
 int dist = new int[V+1];
 Arrays.fill(dist, Integer.MAX_VALUE);  // 문제에 따라 최댓값 달라짐
 ```
 
-3. 시작 정점과 연결된 정점들의 최단 거리 값을 갱신한다.
+4. 시작 정점과 연결된 정점들의 최단 거리 값을 갱신한다.
 ```java
 private static void dijkstra(int x) {
     PriorityQueue<Node> pq = new PriorityQueue<>();
