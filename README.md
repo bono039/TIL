@@ -26,3 +26,10 @@
 ## Data Structure
 * [[선형 자료구조]   &nbsp;&nbsp;&nbsp;&nbsp;배열, 연결 리스트, 스택, 큐](https://github.com/bono039/TIL/blob/main/Data%20Structure/linearDataStructure.md)
 * [비선형 자료구조] 그래프, 트리, 우선순위 큐, 힙, 해시 테이블
+
+<br/>
+
+## 운영체제
+* [컴퓨터 구조 시작하기](https://github.com/bono039/TIL/blob/main/OS/section1.md)
+* [데이터](https://github.com/bono039/TIL/blob/main/OS/section2.md)
+* [명렁어](https://github.com/bono039/TIL/blob/main/OS/section3.md)
