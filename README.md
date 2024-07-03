@@ -30,6 +30,7 @@
 <br/>
 
 ## 운영체제
-* [컴퓨터 구조 시작하기](https://github.com/bono039/TIL/blob/main/OS/section1.md)
-* [데이터](https://github.com/bono039/TIL/blob/main/OS/section2.md)
-* [명렁어](https://github.com/bono039/TIL/blob/main/OS/section3.md)
+* [📕 혼자 공부하는 컴퓨터 구조+운영체제](https://hongong.hanbit.co.kr/%EC%BB%B4%ED%93%A8%ED%84%B0-%EA%B5%AC%EC%A1%B0-%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C/)
+    * [1장. 컴퓨터 구조 시작하기](https://github.com/bono039/TIL/blob/main/OS/section1.md)
+    * [2장. 데이터](https://github.com/bono039/TIL/blob/main/OS/section2.md)
+    * [3장. 명렁어](https://github.com/bono039/TIL/blob/main/OS/section3.md)
