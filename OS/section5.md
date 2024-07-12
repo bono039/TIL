@@ -26,6 +26,7 @@
 CPU 내에서 명령어를 실행하는 부품 (여러 개 가능)
 ```
 - **멀티코어 프로세서** : 여러 개의 코어를 포함하고 있는 CPU
+
 ![image](https://github.com/user-attachments/assets/0a02e2cd-f055-461a-8a20-0ba23226e40a)
 
 <br/>
@@ -46,8 +47,8 @@ CPU 내에서 명령어를 실행하는 부품 (여러 개 가능)
 <br/>
 
 #### 2. SW 스레드
-> 하나의 프로그램에서 **독립적**으로 실행되는 단위
-![image](https://github.com/user-attachments/assets/75af54d4-d03e-4367-a492-520e21ab0f44)
+> 하나의 프로그램에서 **독립적**으로 실행되는 단위<br/>
+> ![image](https://github.com/user-attachments/assets/75af54d4-d03e-4367-a492-520e21ab0f44)
 
 <br/>
 
