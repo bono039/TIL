@@ -54,8 +54,15 @@
 
 <br/>
 
+## 메모리의 주소 공간
+### 물리 주소
+- 메모리 입장에서 바라본 주소
+- 정보가 실제로 저장된 HW 상 주소
 
-
+### 논리 주소
+- CPU와 실행 중인 프로그램 입장에서 바라본 주소
+- 실행 중인 프로그램 각각에게 부여된 0번지부터 시작하는 주소
+<img src="https://github.com/user-attachments/assets/45c67e98-d094-420a-bc45-5fdceeb8c8f1" alt="clock" width="450"/>
 
 <br/>
 
