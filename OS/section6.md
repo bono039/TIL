@@ -31,6 +31,32 @@
 
 <br/>
 
+#### 3. SDRAM (Synchronous RAM)
+- 특별한(발전된 형태의) DRAM
+- 클럭 신호와 동기화된 DRAM
+
+<br/>
+
+#### 4. DDR SDRAM (Double Data Rate SDRAM)
+- 특별한(발전된 형태의) SDRAM
+- 최근 가장 대중적으로 사용하는 RAM
+- **대역폭**을 2배 넓혀 속도를 빠르게 만든 SDRAM &nbsp; (* _대역폭_ : 데이터를 주고받는 길의 너비)
+          <details>
+               <summary>각각 대역폭</summary>
+               <div markdown="1">
+               
+     → SDR SDRAM : 대역폭 1개          
+     → DDR SDRAM : 대역폭 2개          
+     → DDR2 SDRAM : 대역폭 4개          
+     → DDR3 SDRAM : 대역폭 8개          
+     → DDR4 SDRAM : 대역폭 16개
+               
+
+<br/>
+
+
+
+
 <br/>
 
 #### 🔗 참고
