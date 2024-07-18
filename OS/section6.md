@@ -66,6 +66,40 @@
 
 <br/>
 
+<br/>
+
+### 물리 주소와 논리 주소의 변환
+
+    MMU(메모리 관리 장치)라는 HW 장치에 의해 변환
+
+<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FBZu6r%2FbtsCTCuvCy3%2FzrdPzz19DAYGoGOYlgAP0k%2Fimg.png" alt="clock" width="350"/>
+
+> MMU
+> &nbsp; : 논리 주소와 베이스 레지스터의 값을 더해 논리 주소를 물리 주소로 변환
+
+- ```논리 주소``` : 프로그램의 시작점으로부터 떨어진 거리
+- ```베이스 레지스터``` : **프로그램의 가장 작은 물리 주소 = 프로그램의 첫 물리 주소**
+- 단점 : 메모리 보호 NO
+
+<img src="https://github.com/user-attachments/assets/92cdfff8-424f-4075-9ff3-ab042a4ae5d3" alt="clock" width="500"/>
+
+<br/>
+
+<br/>
+
+### 메모리 보호 방법
+#### 한계 레지스터
+- 프로그램 영역 침범할 수 있는 명령어 실행 막음
+- **논리 주소의 최대 크기 저장**
+- 베이스 레지스터 값 ≤ 프로그램의 물리 주소 범위 < 베이스 레지스터 + 한계 레지스터 값
+<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fbg13dU%2FbtsCZihGerw%2FsC5j51YNtrhTykNkNdFUFK%2Fimg.png" alt="clock" width="450"/>
+
+- CPU, 메모리에 접근하기 전에 **접근하고자 하는 논리 주소가 한계 레지스터보다 작은지** 항상 검사
+  <br/> ⇒ 실행 중인 프로그램의 독립적 실행 공간 확보 & 하나의 프로그램이 다른 프로그램 침범 못 하게 보호
+<img src="https://github.com/user-attachments/assets/7c3a1d05-0a05-4155-b147-38d8727c8df5" alt="clock" width="500"/>
+
+<br/>
+
 #### 🔗 참고
 * [[컴퓨터 공학 기초 강의] 15강. RAM의 특성과 종류](https://youtu.be/VO0RQAA7KYc?feature=shared)
 * [[컴퓨터 공학 기초 강의] 16강. 메모리의 주소 공간-물리 주소와 논리 주소](https://youtu.be/_mQNCRA1fVA?feature=shared)
