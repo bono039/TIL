@@ -36,20 +36,21 @@
 - 클럭 신호와 동기화된 DRAM
 
 <br/>
+
 #### 4. DDR SDRAM (Double Data Rate SDRAM)
 - 특별한(발전된 형태의) SDRAM
 - 최근 가장 대중적으로 사용하는 RAM
 - **대역폭**을 2배 넓혀 속도를 빠르게 만든 SDRAM &nbsp; (* _대역폭_ : 데이터를 주고받는 길의 너비)
-          <details>
-               <summary>각각 대역폭</summary>
-               <div markdown="1">
-               
-     → SDR SDRAM : 대역폭 1개          
-     → DDR SDRAM : 대역폭 2개          
-     → DDR2 SDRAM : 대역폭 4개          
-     → DDR3 SDRAM : 대역폭 8개          
-     → DDR4 SDRAM : 대역폭 16개
-               
+     <details>
+          <summary>각각 대역폭</summary>
+          <div markdown="1">
+          
+          → SDR SDRAM : 대역폭 1개          
+          → DDR SDRAM : 대역폭 2개          
+          → DDR2 SDRAM : 대역폭 4개          
+          → DDR3 SDRAM : 대역폭 8개          
+          → DDR4 SDRAM : 대역폭 16개
+     </details>      
 
 <br/>
 
@@ -119,7 +120,7 @@
 ### 캐시 메모리
     CPU의 연산 속도와 메모리 접근 속도의 차이를 줄이기 위한 저장 장치
 
-- 레지스터(CPU)보다 용량이 크고 메모리보다 빠른 SRAM 기반 저장 장치 
+- 레지스터(CPU)보다 용량이 크고 메모리보다 빠른 **SRAM 기반** 저장 장치 
 - 메모리에서 CPU가 사용할 일부 데이터를 미리 캐시 메모리로 가져와 사용
 
 <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FGtrli%2FbtsC1FQ0afu%2FRQtMMKle3fZxtIgyOgK1r1%2Fimg.png" alt="clock" width="450"/>
@@ -153,8 +154,8 @@
     캐시 메모리는 메모리보다 용량이 작으므로 CPU가 자주 사용할 만한 데이터를 예측해 저장하는 것
 
 
-1. 캐시 히트 : 예측이 맞을 경우 (CPU가 캐시 메모리에 저장된 값을 활용할 경우)
-2. 캐시 미스 : 예측이 틀릴 경우 (CPU가 메모리에 접근해야 하는 경우)
+1. **캐시 히트** : 예측이 맞을 경우 (CPU가 캐시 메모리에 저장된 값을 활용할 경우)
+2. **캐시 미스** : 예측이 틀릴 경우 (CPU가 메모리에 접근해야 하는 경우)
 
 
 * 캐시 적중률 :  캐시 히트 횟수 / (캐시 히트 횟수 + 캐시 미스 횟수)
