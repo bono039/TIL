@@ -22,8 +22,6 @@ docker pull mysql
 docker run -d -p 3307:3307 -e MYSQL_ROOT_PASSWORD=1234 --name mysql1 mysql
 ```
 
-<img src="https://github.com/user-attachments/assets/92feea9b-7cbb-4a35-9831-bd02cebffe47" alt="clock" width="500"/>
-
 <br/>
 <br/>
 <br/>
