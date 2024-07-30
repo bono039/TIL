@@ -73,3 +73,9 @@ use stock_example;
 ```
 <img src="https://github.com/user-attachments/assets/1db1946e-2523-4d3c-92ba-cda5c74a28e6" alt="clock" width="300"/>
 
+<br/>
+<br/>
+<br/>
+
+참고
+* https://2nan.tistory.com/107
