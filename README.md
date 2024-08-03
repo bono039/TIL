@@ -46,7 +46,7 @@
 <br/>
 
 ## Git
-* [[Error] There isn't anything to compare]()
+* [[Error] There isn't anything to compare](https://github.com/bono039/TIL/blob/main/Git/prError1.md)
 
 <br/>
 
