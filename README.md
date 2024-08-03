@@ -42,7 +42,7 @@
 <br/>
 
 ## IntelliJ
-
+* [[Error] Error adding module to project: Module already exists:](https://github.com/bono039/TIL/blob/main/IntelliJ/moduleAddError.md)
 <br/>
 
 ## Docker
