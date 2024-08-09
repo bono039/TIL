@@ -43,6 +43,7 @@
 
 ## Spring Boot
 * [[Error] Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "INSERT INTO user~"](https://github.com/bono039/TIL/blob/main/Spring/H2ReservedKeywordError.md)
+* [[Error] Exceution failed for task ':compileTestJava'.](https://github.com/bono039/TIL/blob/main/Spring/compileTestJavaFAILED.md)
 
 <br/>
 
