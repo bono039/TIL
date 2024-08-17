@@ -16,8 +16,8 @@
 
 ```
 // Faker : 테스트 시 가짜 데이터 생성하는 오픈소스 라이브러리
-implementation ('com.github.javafaker:javafaker:1.0.2') {exclude module: 'org.yaml'}
-implementation group: 'org.yaml', name: 'snakeyaml', version: '1.26'
+implementation ('com.github.javafaker:javafaker:1.0.2') {exclude module: 'snakeyaml'}
+implementation group: 'org.yaml', name: 'snakeyaml', version: '2.2'  // 현재 Spring Boot와 맞는 snakeyaml 버전 넣어야 함
 ```
 
 <br/>
