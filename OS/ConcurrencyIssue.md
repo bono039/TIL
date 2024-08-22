@@ -1,6 +1,6 @@
-# Race Condition으로 인한 동시성 이슈 해결법
+# 동시성 이슈 해결법
 > 
-> Race Condition
+> [발생 원인] Race Condition
 > 
 > &nbsp;&nbsp; 정의
 >
@@ -19,7 +19,8 @@
 
 <br/>
 
-## 🏃‍♀️ Race Condition
+## [발생 원인] Race Condition
+### 정의
 > 둘 이상의 스레드가 공유 데이터에 액세스할 수 있고, 동시에 변경하려고 할 때 발생하는 문제
 
 <br/>
@@ -50,6 +51,8 @@ public void 동시에_100개의_요청() throws InterruptedException {
     assertEquals(0, stock.getQuantity());
 }
 ```
+
+<br/>
 
 <b>예상</b><br/>
 : 스레드1이 데이터를 가져가서 갱신한 값을 스레드2가 가져간 이후에 갱신하기를 예상한다.
@@ -106,8 +109,84 @@ public void 동시에_100개의_요청() throws InterruptedException {
 
 ![image](https://github.com/user-attachments/assets/f5510bb5-c47c-4a39-a3b5-8ba120e2b7d1)
 
+<br/>
+
+### ② Pessimistic Lock 적용
+- 실제로 데이터에 Lock을 걸어 데이터 정합성을 맞춘다.
+- Row / Table 단위로 건다.
+- 장점
+    - Exclusive Lock을 거는 경우, 다른 트랜잭션에서는 Lock이 해제되기 전 데이터를 가져갈 수 없다. (=데이터 정합성이 보장된다.)
+    - 충돌이 빈번하게 일어난다면, Opitimistic Lock 보다 성능이 좋을 수 있다.
+- 단점
+    - 데드락이 걸릴 수 있어 주의해야 한다.
+    - 별도의 Lock을 잡으므로 성능 감소가 있을 수 있다.
+
+![image](https://github.com/user-attachments/assets/188c4923-3a1b-4364-82d2-da506eba9840)
+![image](https://github.com/user-attachments/assets/17c43967-6911-4d41-925c-2933abdee93a)
+
+<br/>
+
+#### How To
+1. Pessimistic Lock을 설정한다. ⇒ Repository 인터페이스에 ```@Lock``` 애노테이션을 건다.
+```java
+public interface StockRepository extends JpaRepository<Stock, Long> {
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select s from Stock s where s.id = :id")
+    Stock findByIdWithPessimisticLock(Long id);
+}
+```
+
+<br/>
+
+2. Pessimistic Lock을 위한 재고 감소 로직을 작성한다. (```service/PessimisticLockStockService.java```)
+```java
+package com.example.stock.service;
+
+import com.example.stock.domain.Stock;
+import com.example.stock.repository.StockRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class PessimisticLockStockService {
+
+    private final StockRepository stockRepository;
+
+    public PessimisticLockStockService(StockRepository stockRepository) {
+        this.stockRepository = stockRepository;
+    }
+
+    @Transactional
+    public void decrease(Long id, Long quantity) {
+        Stock stock = stockRepository.findByIdWithPessimisticLock(id);  // Lock 활용해서 데이터 가져오기
+
+        stock.decrease(quantity);   // 재고 감소시키기
+
+        stockRepository.save(stock);    // 데이터 저장하기
+    }
+}
+```
+
+<br/>
+
+3. TestCase에서 StockServiceTest 코드를 아래와 같이 수정한다.
+> (Before) private **StockService** stockService;
+> 
+> (After) private **PessimisticLockStockService** stockService;
+
+<br/>
+
 
 
 <br/>
 
-### 🔗 참고
+
+#### 결과
+![image](https://github.com/user-attachments/assets/dfdd5e68-76a1-4893-b62e-36a8b3bea855)
+
+
+
+<br/>
+
+## 🔗 참고
