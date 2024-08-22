@@ -1,12 +1,11 @@
-# Race Condition
+# 동시성 이슈 해결방법
 
-## 정의
+## 🏃‍♀️ Race Condition
 > 둘 이상의 스레드가 공유 데이터에 액세스할 수 있고, 동시에 변경하려고 할 때 발생하는 문제
-
 
 <br/>
 
-## 예시
+### 예시
 ```java
 @Test
 public void 동시에_100개의_요청() throws InterruptedException {
@@ -33,13 +32,15 @@ public void 동시에_100개의_요청() throws InterruptedException {
 }
 ```
 
-### 예상
+<b>예상</b>
+
 스레드1이 데이터를 가져가서 갱신한 값을 스레드2가 가져간 이후에 갱신하기를 예상한다.
 
 ![image](https://github.com/user-attachments/assets/7a11fe08-927a-462c-84d3-f82712ef95c4)
 
 
-### 실제
+<b>실제</b>
+
 스레드 1이 데이터를 가져가서 갱신하기 전에 스레드2가 갱신되기 전 값을 가져가면서 갱신이 누락된다.
 
 ![image](https://github.com/user-attachments/assets/12fe319b-21c1-4d34-a6bd-e68249d2fcc9)
@@ -51,10 +52,12 @@ public void 동시에_100개의_요청() throws InterruptedException {
 
 ## 해결법
 하나의 스레드가 작업이 완료된 이후, 다른 스레드가 데이터에 접근할 수 있도록 한다.
+<br/>
 
 ### ① synchronized 키워드 사용 (거의 사용 X)
-메소드 선언부에 ```synchronized``` 키워드를 붙이고, ```Service``` 파일에서 ```@Transactional``` 부분을 주석 처리해 한 개의 스레드만 접근 가능하게 한다.
-![image](https://github.com/user-attachments/assets/d5124f75-dd0a-4953-89bd-9a9adbe7d3fb)
+```Service``` 파일의 메소드 선언부에 ```synchronized``` 키워드를 붙이고, ```@Transactional``` 부분을 주석 처리해 한 개의 스레드만 접근 가능하게 한다.
+![image](https://github.com/user-attachments/assets/b7bf9f6e-e1d2-482f-9f37-956b3a0bf5a5)
+
 
 <details>
 <summary>@Transactional 부분에 주석 처리하는 이유</summary>
@@ -66,8 +69,6 @@ public void 동시에_100개의_요청() throws InterruptedException {
   - ```@Transactional```은 매핑한 클래스를 새로 만들어 실행한다.
   - 그리고 트랜잭션 종료 시점에 DB에 업데이트를 하게 되는데, 실제 DB가 업데이트되기 전에 다른 스레드에서도 메소드 호출이 가능하다.
   - 이 때, 다른 스레드에서 갱신되기 전 값을 가져가게 되면서 이전과 동일한 문제가 발생하게 되는 것이다.
-    
-![image](https://github.com/user-attachments/assets/9dd0ca7a-4702-43a5-bfd6-db4d393f2246)
 
 </div>
 </details>
@@ -77,8 +78,6 @@ public void 동시에_100개의_요청() throws InterruptedException {
 <b>결과</b>
 
 테스트케이스가 정상적으로 실행된다.
-
-![image](https://github.com/user-attachments/assets/cd718436-df04-4696-a99b-f93cb372f59b)
 
 ![image](https://github.com/user-attachments/assets/2ad4da35-150c-44ea-b20d-1af08d750772)
 
