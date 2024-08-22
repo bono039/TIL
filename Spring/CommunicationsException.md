@@ -82,7 +82,9 @@ docker pull mysql
 docker run -d -p 3307:3306 -e MYSQL_ROOT_PASSWORD=1234 --name mysql1 mysql
 
 docker exec -it mysql1 bash
+```
 
+```MySQL
 mysql -u root -p
 
 create database stock_example;
