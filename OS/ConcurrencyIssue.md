@@ -1,7 +1,21 @@
-# 동시성 이슈 해결 방법
+# Race Condition으로 인한 동시성 이슈 해결법
+> 
 > Race Condition
+> 
+> &nbsp;&nbsp; 정의
+>
+> &nbsp;&nbsp; 예시
+>
+> 
 > 동시성 이슈 해결법
-> >  ① synchronized 키워드 사용 (거의 사용 X)
+> 
+> &nbsp;&nbsp; 1. synchronized 키워드 사용 (거의 사용 X)
+> 
+> &nbsp;&nbsp; 2. Pessimistic Lock
+> 
+> &nbsp;&nbsp; 3. Optimistic Lock
+>
+> &nbsp;&nbsp; 4. Named Lock
 
 <br/>
 
@@ -37,16 +51,14 @@ public void 동시에_100개의_요청() throws InterruptedException {
 }
 ```
 
-<b>예상</b>
-
-스레드1이 데이터를 가져가서 갱신한 값을 스레드2가 가져간 이후에 갱신하기를 예상한다.
+<b>예상</b><br/>
+: 스레드1이 데이터를 가져가서 갱신한 값을 스레드2가 가져간 이후에 갱신하기를 예상한다.
 
 ![image](https://github.com/user-attachments/assets/7a11fe08-927a-462c-84d3-f82712ef95c4)
 
 
-<b>실제</b>
-
-스레드 1이 데이터를 가져가서 갱신하기 전에 스레드2가 갱신되기 전 값을 가져가면서 갱신이 누락된다.
+<b>현실</b><br/>
+: 스레드 1이 데이터를 가져가서 갱신하기 전에 스레드2가 갱신되기 전 값을 가져가면서 갱신이 누락된다.
 
 ![image](https://github.com/user-attachments/assets/12fe319b-21c1-4d34-a6bd-e68249d2fcc9)
 
@@ -57,6 +69,7 @@ public void 동시에_100개의_요청() throws InterruptedException {
 
 ## 동시성 이슈 해결법
 하나의 스레드가 작업이 완료된 이후, 다른 스레드가 데이터에 접근할 수 있도록 한다.
+<br/>
 <br/>
 
 ### ① synchronized 키워드 사용 (거의 사용 X)
@@ -80,17 +93,15 @@ public void 동시에_100개의_요청() throws InterruptedException {
 
 <br/>
 
-<b>결과</b>
-
-테스트케이스가 정상적으로 실행된다.
+<b>결과</b> <br/>
+: 테스트케이스가 정상적으로 실행된다.
 
 ![image](https://github.com/user-attachments/assets/2ad4da35-150c-44ea-b20d-1af08d750772)
 
 <br/>
 
-<b>문제점</b>
-
-JAVA의 synchronized 키워드는 하나의 프로세스 안에서만 보장되는데,
+<b>문제점</b><br/>
+: JAVA의 ```synchronized``` 키워드는 하나의 프로세스 안에서만 보장되는데,
 서버가 2대 이상이면 여러 스레드에서 동시에 데이터에 접근 가능하게 된다. (Race Condition 이슈)
 
 ![image](https://github.com/user-attachments/assets/f5510bb5-c47c-4a39-a3b5-8ba120e2b7d1)
