@@ -23,16 +23,12 @@ docker container start 컨테이너명
 ```
 ![image](https://github.com/user-attachments/assets/f20d39c0-0940-403c-bc4b-e97076b609e3)
 
-
-
 <br/>
 
 ## 결과
 에러 없이 테스트케이스가 정상실행된다.
 
 ![image](https://github.com/user-attachments/assets/807fd737-1e66-41a7-a3b0-35349f20560b)
-
-
 
 <br/>
 
