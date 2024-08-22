@@ -1,5 +1,7 @@
 ## 에러
-docker 컨테이너에 접속하려고 ```docker exec -it mysql1 bash``` 명령어를 보냈는데 아래와 같이 에러가 떴다.
+테스트케이스가 실행이 되지 않으면서 ```com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure``` 에러가 발생했다.
+
+docker 컨테이너에 접속하지 않아 발생하는 문제라는 사실을 깨닫고 ```docker exec -it mysql1 bash``` 명령어를 보냈는데, 아래와 같이 에러가 떴다.
 
 ```
 Error response from daemon: container ~ is not running
@@ -15,22 +17,22 @@ Error response from daemon: container ~ is not running
 <br/>
 
 ## 해결 방법
-컨테이너를 실행하고 다시 명령어를 입력하면 된다.
+컨테이너를 실행하고 다시 나머지 명령어를 입력하면 된다.
 ```bash
 docker container start 컨테이너명
 ```
-![image](https://github.com/user-attachments/assets/9f419c4e-b9f6-4f1a-9f34-9917eb98800c)
+![image](https://github.com/user-attachments/assets/f20d39c0-0940-403c-bc4b-e97076b609e3)
+
 
 
 <br/>
 
-<br/>
+## 결과
+에러 없이 테스트케이스가 정상실행된다.
+
+![image](https://github.com/user-attachments/assets/807fd737-1e66-41a7-a3b0-35349f20560b)
 
 
-
-<b>🔴 유의사항</b>
-
-- 이것 때문에 com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure 에러가 발생할 수 있다.
 
 <br/>
 
