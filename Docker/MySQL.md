@@ -17,10 +17,17 @@ docker pull mysql
 <br/>
 <br/>
 
-* 포트 3307번에 컨테이너 mysql1 생성 및 실행
+* MySQL 데이터베이스 컨테이너 mysql1 생성 및 실행 (로컬 머신의 **127.0.0.1:3307**에서 MySQL에 접근)
 ```bash
-docker run -d -p 3307:3307 -e MYSQL_ROOT_PASSWORD=1234 --name mysql1 mysql
+docker run -d -p 3307:3306 -e MYSQL_ROOT_PASSWORD=1234 --name mysql1 mysql
 ```
+- ```docker run``` : Docker 컨테이너 실행 위한 명령어
+- ```-d``` : 컨테이너를 백그라운드에서 실행하도록 지정
+- ```-p 호스트포트:컨테이너포트``` : 호스트(=로컬 머신)의 포트 3307을 컨테이너 내부에서 MySQL이 사용하는 기본 포트 3306에 바인딩
+- ```-e MYSQL_ROOT_PASSWORD=1234``` : 컨테이너에서 실행될 MySQL의 환경 변수 설정. MySQL의 루트(root) 계정 비밀번호를 1234로 설정.
+- ```--name mysql1``` : 생성될 컨테이너에 mysql1이라는 이름 부여
+- ```--mysql``` : 'mysql' 이미지로 컨테이너 생성
+
 
 <br/>
 <br/>
@@ -31,8 +38,7 @@ docker run -d -p 3307:3307 -e MYSQL_ROOT_PASSWORD=1234 --name mysql1 mysql
 ```bash
 docker ps
 ```
-<img src="https://github.com/user-attachments/assets/cf6a3ba2-4a1f-4163-aa5b-317a9a06ca00" alt="clock" width="700"/>
-<img src="https://github.com/user-attachments/assets/63b80cc3-df18-4484-9e4c-520a382c19e9" alt="clock" width="450"/>
+![image](https://github.com/user-attachments/assets/5c44d020-ec29-4d2f-b6a2-12457e6fe2bb)
 
 <br/>
 <br/>
@@ -79,3 +85,4 @@ use stock_example;
 
 참고
 * https://2nan.tistory.com/107
+* https://www.inflearn.com/community/questions/1233570/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EB%A5%BC-%EC%B2%98%EC%9D%8C-%EC%8B%9C%EC%9E%91%EC%8B%9C%EC%97%90-java-sql-sqlexception-access-denied-for-user-x27-root-x27-x
