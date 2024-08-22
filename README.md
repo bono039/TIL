@@ -47,9 +47,10 @@
 
 <br/>
 
-## Spring Boot
+## Spring
 * [[Error] Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "INSERT INTO user~"](https://github.com/bono039/TIL/blob/main/Spring/H2ReservedKeywordError.md)
 * [[Error] Exceution failed for task ':compileTestJava'.](https://github.com/bono039/TIL/blob/main/Spring/compileTestJavaFAILED.md)
+* [[Error] Spring-MySQL 연결 에러 : com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure](https://github.com/bono039/TIL/blob/main/Spring/CommunicationsException.md)
 
 <br/>
 
