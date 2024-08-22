@@ -24,6 +24,7 @@ docker run -d -p 3307:3306 -e MYSQL_ROOT_PASSWORD=1234 --name mysql1 mysql
 - ```docker run``` : Docker 컨테이너 실행 위한 명령어
 - ```-d``` : 컨테이너를 백그라운드에서 실행하도록 지정
 - ```-p 호스트포트:컨테이너포트``` : 호스트(=로컬 머신)의 포트 3307을 컨테이너 내부에서 MySQL이 사용하는 기본 포트 3306에 바인딩
+  - 잘못 설정 시, ```com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure``` 에러가 발생한다.
 - ```-e MYSQL_ROOT_PASSWORD=1234``` : 컨테이너에서 실행될 MySQL의 환경 변수 설정. MySQL의 루트(root) 계정 비밀번호를 1234로 설정.
 - ```--name mysql1``` : 생성될 컨테이너에 mysql1이라는 이름 부여
 - ```--mysql``` : 'mysql' 이미지로 컨테이너 생성
