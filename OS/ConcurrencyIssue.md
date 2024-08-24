@@ -112,6 +112,9 @@ public void 동시에_100개의_요청() throws InterruptedException {
 <br/>
 
 ### ② Pessimistic Lock 적용
+
+![image](https://github.com/user-attachments/assets/4987781d-5125-46af-bae6-999b51d53753)
+
 - 실제로 데이터에 Lock을 걸어 데이터 정합성을 맞춘다.
 - Row / Table 단위로 건다.
 - 장점
@@ -131,7 +134,7 @@ public void 동시에_100개의_요청() throws InterruptedException {
 ```java
 public interface StockRepository extends JpaRepository<Stock, Long> {
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)  // Pessimistic Lock 걺
     @Query("select s from Stock s where s.id = :id")
     Stock findByIdWithPessimisticLock(Long id);
 }
