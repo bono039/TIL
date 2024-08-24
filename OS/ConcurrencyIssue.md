@@ -1,4 +1,4 @@
-# 동시성 이슈 해결법
+![image](https://github.com/user-attachments/assets/8fe2d0cb-9a56-4c60-8446-a1afc8813af9)![image](https://github.com/user-attachments/assets/6803471c-a284-4fca-978a-4dbf9c777c1f)# 동시성 이슈 해결법
 > 
 > [발생 원인] Race Condition
 > 
@@ -130,7 +130,7 @@ public void 동시에_100개의_요청() throws InterruptedException {
 <br/>
 
 #### How To
-1. Pessimistic Lock을 설정한다. ⇒ Repository 인터페이스에 ```@Lock``` 애노테이션을 건다.
+1. Pessimistic Lock을 설정한다. ⇒ Repository 인터페이스에 ```@Lock``` 애노테이션을 건다. 
 ```java
 public interface StockRepository extends JpaRepository<Stock, Long> {
 
@@ -180,13 +180,120 @@ public class PessimisticLockStockService {
 
 <br/>
 
+#### 결과
+![image](https://github.com/user-attachments/assets/dfdd5e68-76a1-4893-b62e-36a8b3bea855)
 
+<br/>
+
+
+### ③ Optimistic Lock 적용
+
+![image](https://github.com/user-attachments/assets/94f19de1-e402-4143-a6a4-b3409fc3bd41)
+
+
+- 실제로 Lock을 이용하지 않고 **버전**을 이용함으로써 데이터 정합성을 맞춘다.
+
+- 장점
+    - 별도의 Lock을 잡지 않아 비관적 락보다는 성능 상 좋다.
+    - 충돌이 빈번하게 일어나지 않는 경우 추천
+- 단점
+    - 업데이트가 실패 시, 재시도 로직을 개발자가 직접 작성해야 한다.
+    - 충돌이 빈번하게 일어나는 경우에는 비추천 (이 때는 비관적 락 추천)
+
+<br/>
+
+#### How To
+1. 버전을 활용할 것이므로 도메인 클래스에 아래 코드를 삽입한다. (```domain/Stock.java```)
+```java
+@Version
+private Long version;
+```
+<br/>
+
+2. Optimistic Lock을 설정한다. ⇒ Repository 인터페이스에 ```@Lock``` 애노테이션을 건다.
+```java
+public interface StockRepository extends JpaRepository<Stock, Long> {
+
+    @Lock(LockModeType.OPTIMISTIC)    // Optimisitc Lock 걺
+    @Query("select s from Stock s where s.id = :id")
+    Stock findByIdWithOptimisticLock(Long id);
+}
+```
+
+<br/>
+
+3. Optimistic Lock을 위한 재고 감소 로직을 작성한다. (```service/OptimisticLockStockService.java```)
+```java
+package com.example.stock.service;
+
+import com.example.stock.domain.Stock;
+import com.example.stock.repository.StockRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class OptimisticLockStockService {
+
+    private StockRepository stockRepository;
+
+    public OptimisticLockStockService(StockRepository stockRepository) {
+        this.stockRepository = stockRepository;
+    }
+
+    @Transactional
+    public void decrease(Long id, Long quantity) {
+        Stock stock = stockRepository.findByIdWithOptimisticLock(id);   // Optimistic Lock으로 데이터 가져오기
+
+        stock.decrease(quantity);    // 재고 감소시키기
+        stockRepository.save(stock);    // 데이터 저장하기
+    }
+}
+```
+
+<br/>
+
+4. 업데이트 실패 시 재시도해야 하므로 facade를 사용한다. (```facade/OptimisticLockStockFacade.java```)
+```java
+package com.example.stock.facade;
+
+import com.example.stock.service.OptimisticLockStockService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class OptimisticLockStockFacade {
+
+    private final OptimisticLockStockService optimisticLockStockService;
+
+    public OptimisticLockStockFacade(OptimisticLockStockService optimisticLockStockService) {
+        this.optimisticLockStockService = optimisticLockStockService;
+    }
+
+    public void decrease(Long id, Long quantity) throws InterruptedException {
+        // 업데이트 실패 시 재시도해야 하므로 while문 사용
+        while(true) {
+            try {
+                optimisticLockStockService.decrease(id, quantity);
+                break;
+            } catch(Exception e) {
+                // 업데이트 실패 시, 50ms 이후 재시도
+                Thread.sleep(50);
+            }
+        }
+    }
+}
+```
+
+<br/>
+
+5. 비관적 락 테스트코드와 거의 유사하게 [테스트코드](https://github.com/bono039/stock/blob/main/src/test/java/com/example/stock/facade/OptimisticLockStockFacadeTest.java)를 작성하고 실행한다. (```test/.../facade/OptimisticLockStockFacadeTest.java```)
 
 <br/>
 
 
 #### 결과
-![image](https://github.com/user-attachments/assets/dfdd5e68-76a1-4893-b62e-36a8b3bea855)
+![image](https://github.com/user-attachments/assets/b192ee3a-5759-417d-8dca-4db6f0428cc1)
+
+
 
 
 
