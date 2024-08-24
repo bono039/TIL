@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/8fe2d0cb-9a56-4c60-8446-a1afc8813af9)![image](https://github.com/user-attachments/assets/6803471c-a284-4fca-978a-4dbf9c777c1f)# 동시성 이슈 해결법
+# 동시성 이슈 해결법
 > 
 > [발생 원인] Race Condition
 > 
