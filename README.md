@@ -41,7 +41,7 @@
 
 <br/>
 
-* [Race Condition으로 인한 동시성 이슈 해결법](https://github.com/bono039/TIL/blob/main/OS/ConcurrencyIssue.md)
+* [동시성 이슈 해결법](https://github.com/bono039/TIL/blob/main/OS/ConcurrencyIssue.md)
 
 <br/>
 
