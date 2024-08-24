@@ -8,14 +8,18 @@
 >
 > 
 > 동시성 이슈 해결법
-> 
-> &nbsp;&nbsp; 1. synchronized 키워드 사용 (거의 사용 X)
-> 
-> &nbsp;&nbsp; 2. Pessimistic Lock
-> 
-> &nbsp;&nbsp; 3. Optimistic Lock
 >
-> &nbsp;&nbsp; 4. Named Lock
+> &nbsp;&nbsp; synchronized를 사용한 방법
+> 
+> &nbsp;&nbsp;&nbsp;&nbsp; 1. synchronized 키워드 사용 (거의 사용 X)
+> 
+> &nbsp;&nbsp; DB(MySQL)를 사용한 방법
+> 
+> &nbsp;&nbsp;&nbsp;&nbsp; 2. Pessimistic Lock
+> 
+> &nbsp;&nbsp;&nbsp;&nbsp; 3. Optimistic Lock
+>
+> &nbsp;&nbsp;&nbsp;&nbsp; 4. Named Lock
 
 <br/>
 
@@ -134,7 +138,7 @@ public void 동시에_100개의_요청() throws InterruptedException {
 ```java
 public interface StockRepository extends JpaRepository<Stock, Long> {
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)  // Pessimistic Lock 걺
+    @Lock(LockModeType.PESSIMISTIC_WRITE)  // ⚠️ Pessimistic Lock 걺
     @Query("select s from Stock s where s.id = :id")
     Stock findByIdWithPessimisticLock(Long id);
 }
@@ -185,7 +189,6 @@ public class PessimisticLockStockService {
 
 <br/>
 
-
 ### ③ Optimistic Lock 적용
 
 ![image](https://github.com/user-attachments/assets/94f19de1-e402-4143-a6a4-b3409fc3bd41)
@@ -214,7 +217,7 @@ private Long version;
 ```java
 public interface StockRepository extends JpaRepository<Stock, Long> {
 
-    @Lock(LockModeType.OPTIMISTIC)    // Optimisitc Lock 걺
+    @Lock(LockModeType.OPTIMISTIC)    // ⚠️ Optimisitc Lock 걺
     @Query("select s from Stock s where s.id = :id")
     Stock findByIdWithOptimisticLock(Long id);
 }
@@ -293,9 +296,146 @@ public class OptimisticLockStockFacade {
 #### 결과
 ![image](https://github.com/user-attachments/assets/b192ee3a-5759-417d-8dca-4db6f0428cc1)
 
+<br/>
+
+### ④ Named Lock 적용
+- 이름을 가진 메타데이터 Lock
+- 주로 분산 Lock 구현 시 사용된다.
+- 데이터 삽입 시 데이터 정합성 맞추기 위해 사용된다.
+- 이름을 가진 Lock을 획득한 후, 해제할 때까지 다른 세션은 이 Lock을 획득할 수 없다.
+- [주의사항] 트랜잭션 종료 시 Lock이 자동으로 해제되지 않으므로, 별도의 명령어로 해제를 수행하거나, 선점 시간이 끝나야 Lock이 해제된다.
+
+<br/>
+
+<b>예</b><br/>
+
+![image](https://github.com/user-attachments/assets/122d83ee-7d98-416d-a0b4-a8a667faefff)
+
+- 대상이 아닌 별도의 공간에 Lock을 건다.
+- 세션1이 1이라는 이름으로 Lock을 건다면, 다른 세션은 세션1이 해제된 이후 Lock을 걸 수 있다.
+
+<br/>
+
+<b>장점</b><br/>
+- 비관적 락은 타임아웃 구현이 어렵지만, 네임드 락은 타임아웃 구현이 쉽다.
+    
+<b>단점</b><br/>
+- 트랜잭션 종료 시 Lock 해제, 세션 관리를 잘 해줘야 하므로 주의해서 사용해야 한다.
+- 실제로 사용할 때는 구현 방법이 복잡할 수 있다.
+
+<br/>
+
+#### How To
+JPA의 Native Query를 사용한다.
+
+<br/>
+
+1. Named Lock을 설정한다. (```repository/LockRepository.interface```)
+```java
+package com.example.stock.repository;
+
+import com.example.stock.domain.Stock;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+public interface LockRepository extends JpaRepository<Stock, Long> {
+
+    // 네임드 락 획득
+    @Query(value = "select get_lock(:key, 3000)", nativeQuery = true)
+    void getLock(String key);
+
+    // 네임드 락 해제
+    @Query(value = "select release_lock(:key)", nativeQuery = true)
+    void releaseLock(String key);
+}
+```
+
+<br/>
+
+2. 실제 로직 전후로 Lock을 획득-해제 해야 하므로 facade 클래스를 추가한다. (```facade/NamedLockStockFacade.java```)
+```java
+package com.example.stock.facade;
+
+import com.example.stock.domain.Stock;
+import com.example.stock.repository.LockRepository;
+import com.example.stock.service.StockService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class NamedLockStockFacade {
+
+    private LockRepository lockRepository;  // Lock 획득용
+
+    private final StockService stockService; // 재고 감소용
+
+    public NamedLockStockFacade(LockRepository lockRepository, StockService stockService) {
+        this.lockRepository = lockRepository;
+        this.stockService = stockService;
+    }
+
+    public void decrease(Long id, Long quantity) {
+        try {
+            lockRepository.getLock(id.toString());  // Lock 획득하기
+            stockService.decrease(id, quantity);    // 재고 감소하기
+        } finally {
+            // 모든 로직 종료 시 Lock 해제시키기
+            lockRepository.releaseLock(id.toString());
+        }
+    }
+}
+```
+
+<br/>
+
+3. StockService에서는 부모 트랜잭션과 별도로 실행되어야 하므로 ```propagation```을 변경하여 Named Lock을 위한 재고 감소 로직을 작성한다. (```service/StockService.java```)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 원래는 따로 만들어야 한다.
+```java
+package com.example.stock.service;
+
+import com.example.stock.domain.Stock;
+import com.example.stock.repository.StockRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class StockService {
+
+    private final StockRepository sr;
+
+    public StockService(StockRepository sr) {
+        this.sr = sr;
+    }
+
+    // 재고 감소 메소드
+    @Transactional(propagation = Propagation.REQUIRES_NEW)    // ⚠️ 부모 트랜잭션과 별도로 실행되어야 하므로 propagation 변경
+    public void decrease(Long id, Long quantity) {
+        Stock stock = sr.findById(id).orElseThrow();    // Stock 조회하고
+        stock.decrease(quantity);   // 재고 감소시킨 뒤
+        sr.saveAndFlush(stock);    // 갱신된 값 저장하기
+    }
+}
+```
+
+<br/>
+
+4. 같은 데이터소스를 사용할 것이므로 커넥션 풀 사이즈를 넉넉하게 변경한다. (```application.yml```)
+```yaml
+spring.datasource.hikari.maximum-pool-size: 40
+```
+
+<br/>
+
+5. 낙관적 락 테스트코드와 거의 유사하게 [테스트코드](https://github.com/bono039/stock/blob/main/src/test/java/com/example/stock/facade/NamedLockStockFacadeTest.java)를 작성하고 실행한다. (```test/.../facade/NamedLockStockFacadeTest.java```)
+
+<br/>
 
 
+#### 결과
+![image](https://github.com/user-attachments/assets/10804e43-f827-4aae-9412-c1ee1b7d75eb)
 
+<br/>
 
 <br/>
 
