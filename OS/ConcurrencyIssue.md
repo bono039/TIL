@@ -326,7 +326,8 @@ public class OptimisticLockStockFacade {
 <br/>
 
 #### How To
-JPA의 Native Query를 사용한다.
+- MySQL > ```get_lock``` : 네임드 락 획득, ```release_lock``` : 네임드 락 해제
+- JPA의 Native Query를 사용한다.
 
 <br/>
 
