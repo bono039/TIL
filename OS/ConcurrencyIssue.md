@@ -327,11 +327,12 @@ public class OptimisticLockStockFacade {
 
 #### How To
 - MySQL > ```get_lock``` : 네임드 락 획득, ```release_lock``` : 네임드 락 해제
-- JPA의 Native Query를 사용한다.
+- 편의성을 위해 JPA의 Native Query를 사용한다.
+- 이번에는 동일한 데이터소스를 이용해 구현한다. (다른 서비스에도 영향을 미칠 수 있으므로 평소에는 데이터소스를 분리해 구현하는 것을 권장)
 
 <br/>
 
-1. Named Lock을 설정한다. (```repository/LockRepository.interface```)
+1. Lock 관련 레포지토리를 생성해 Named Lock을 설정한다. (```repository/LockRepository.interface```)
 ```java
 package com.example.stock.repository;
 
@@ -339,7 +340,7 @@ import com.example.stock.domain.Stock;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface LockRepository extends JpaRepository<Stock, Long> {
+public interface LockRepository extends JpaRepository<Stock, Long> { // 실무에서는 Stock이 아닌 별도의 JDBC 사용해야 함
 
     // 네임드 락 획득
     @Query(value = "select get_lock(:key, 3000)", nativeQuery = true)
