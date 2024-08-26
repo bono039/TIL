@@ -11,15 +11,21 @@
 >
 > &nbsp;&nbsp; synchronized를 사용한 방법
 > 
-> &nbsp;&nbsp;&nbsp;&nbsp; 1. synchronized 키워드 사용 (거의 사용 X)
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. synchronized 키워드 사용 (거의 사용 X)
 > 
 > &nbsp;&nbsp; DB(MySQL)를 사용한 방법
 > 
-> &nbsp;&nbsp;&nbsp;&nbsp; 2. Pessimistic Lock
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. Pessimistic Lock
 > 
-> &nbsp;&nbsp;&nbsp;&nbsp; 3. Optimistic Lock
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. Optimistic Lock
 >
-> &nbsp;&nbsp;&nbsp;&nbsp; 4. Named Lock
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4. Named Lock
+> 
+> &nbsp;&nbsp; Redis를 사용한 방법
+> 
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5. Lettuce 사용하기
+> 
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6. Redisson 사용하기
 
 <br/>
 
@@ -115,7 +121,7 @@ public void 동시에_100개의_요청() throws InterruptedException {
 
 <br/>
 
-### ② Pessimistic Lock 적용
+### ② [MySQL] Pessimistic Lock 적용
 
 ![image](https://github.com/user-attachments/assets/4987781d-5125-46af-bae6-999b51d53753)
 
@@ -189,7 +195,7 @@ public class PessimisticLockStockService {
 
 <br/>
 
-### ③ Optimistic Lock 적용
+### ③ [MySQL] Optimistic Lock 적용
 
 ![image](https://github.com/user-attachments/assets/94f19de1-e402-4143-a6a4-b3409fc3bd41)
 
@@ -298,7 +304,7 @@ public class OptimisticLockStockFacade {
 
 <br/>
 
-### ④ Named Lock 적용
+### ④ [MySQL] Named Lock 적용
 - 이름을 가진 메타데이터 Lock
 - 주로 분산 Lock 구현 시 사용된다.
 - 데이터 삽입 시 데이터 정합성 맞추기 위해 사용된다.
@@ -439,6 +445,23 @@ spring.datasource.hikari.maximum-pool-size: 40
 
 <br/>
 
+<hr/>
+
+<b>Redis 라이브러리란?</b><br/>
+- 분산 Lock 구현을 위해 사용하는 대표적 라이브러리
+- _**Lettuce**_<br/><img src="https://github.com/user-attachments/assets/ccc270c2-ed0d-472e-b97b-9c454e14fd46" width="500" height="300" />
+   - ```setnx``` 명령어를 통해 분산Lock 구현
+   - 스핀락 방식
+- _**Redisson**_<br/>![image](https://github.com/user-attachments/assets/848cc373-3cb1-4400-8542-b13659050a08)
+   - pub-sub 기반으로 Lock 구현 제공
+
+<br/>
+
+### ⑤ [Redis] Lettuce 적용
+
+
 <br/>
 
 ## 🔗 참고
+* https://www.inflearn.com/course/%EB%8F%99%EC%8B%9C%EC%84%B1%EC%9D%B4%EC%8A%88-%EC%9E%AC%EA%B3%A0%EC%8B%9C%EC%8A%A4%ED%85%9C/news
+* https://helloworld.kurly.com/blog/distributed-redisson-lock/
