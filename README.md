@@ -30,6 +30,10 @@
 <br/>
 
 ## 운영체제
+* [동시성 이슈 해결법](https://github.com/bono039/TIL/blob/main/OS/ConcurrencyIssue.md)
+
+<br/>
+  
 * [📕 혼자 공부하는 컴퓨터 구조+운영체제](https://hongong.hanbit.co.kr/%EC%BB%B4%ED%93%A8%ED%84%B0-%EA%B5%AC%EC%A1%B0-%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C/)
     * [1장. 컴퓨터 구조 시작하기](https://github.com/bono039/TIL/blob/main/OS/section1.md)
     * [2장. 데이터](https://github.com/bono039/TIL/blob/main/OS/section2.md)
@@ -39,9 +43,6 @@
     * [6장. 메모리와 캐시 메모리](https://github.com/bono039/TIL/blob/main/OS/section6.md)
     * [7장. 보조기억장치](https://github.com/bono039/TIL/blob/main/OS/section7.md)
 
-<br/>
-
-* [동시성 이슈 해결법](https://github.com/bono039/TIL/blob/main/OS/ConcurrencyIssue.md)
 
 <br/>
 
@@ -69,3 +70,8 @@
 ## Docker
 * [MySQL 작업 환경 세팅](https://github.com/bono039/TIL/blob/main/Docker/MySQL.md#mysql-%EC%9E%91%EC%97%85-%ED%99%98%EA%B2%BD-%EC%84%B8%ED%8C%85)
 * [[Error] Error response from daemon: container ~ is not running](https://github.com/bono039/TIL/blob/main/Docker/ContainerIsNotRunning.md)
+
+<br/>
+
+## Redis
+* Redis 정의 및 작업환경 세팅
