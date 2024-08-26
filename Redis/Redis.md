@@ -5,6 +5,8 @@
 > 종류
 > 
 > 작업환경 세팅
+>
+> vs MySQL
 <br/>
 
 ## Redis 라이브러리란?
@@ -50,6 +52,19 @@ $ docker ps
 
 <br/>
 
+## vs MySQL
+### MySQL
+- 이미 MySQL 사용하고 있는 경우, 별도 비용 불필요
+- 어느 정도의 트래픽까지는 활용 가능
+- Redis보다는 성능이 좋지 않다.
+
+<br/>
+
+### Redis
+- 활용 중인 Redis가 없다면, 별도의 구축 비용과 인프라 관리 비용 발생
+- MySQL보다는 성능이 좋다.
+
+<br/>
 
 ## 참고
 * https://www.inflearn.com/course/%EB%8F%99%EC%8B%9C%EC%84%B1%EC%9D%B4%EC%8A%88-%EC%9E%AC%EA%B3%A0%EC%8B%9C%EC%8A%A4%ED%85%9C/news
