@@ -120,6 +120,7 @@ public void 동시에_100개의_요청() throws InterruptedException {
 ![image](https://github.com/user-attachments/assets/f5510bb5-c47c-4a39-a3b5-8ba120e2b7d1)
 
 <br/>
+<hr/>
 
 ### ② [MySQL] Pessimistic Lock 적용
 
@@ -133,9 +134,6 @@ public void 동시에_100개의_요청() throws InterruptedException {
 - 단점
     - 데드락이 걸릴 수 있어 주의해야 한다.
     - 별도의 Lock을 잡으므로 성능 감소가 있을 수 있다.
-
-![image](https://github.com/user-attachments/assets/188c4923-3a1b-4364-82d2-da506eba9840)
-![image](https://github.com/user-attachments/assets/17c43967-6911-4d41-925c-2933abdee93a)
 
 <br/>
 
@@ -200,7 +198,7 @@ public class PessimisticLockStockService {
 ![image](https://github.com/user-attachments/assets/94f19de1-e402-4143-a6a4-b3409fc3bd41)
 
 
-- 실제로 Lock을 이용하지 않고 **버전**을 이용함으로써 데이터 정합성을 맞춘다.
+- 실제로 Lock을 이용하지 않고 **버전**을 이용함으로써 데이터 정합성을 맞춘다. <br/>![image](https://github.com/user-attachments/assets/17c43967-6911-4d41-925c-2933abdee93a)
 
 - 장점
     - 별도의 Lock을 잡지 않아 비관적 락보다는 성능 상 좋다.
@@ -447,20 +445,222 @@ spring.datasource.hikari.maximum-pool-size: 40
 
 <hr/>
 
-<b>Redis 라이브러리란?</b><br/>
-- 분산 Lock 구현을 위해 사용하는 대표적 라이브러리
-- _**Lettuce**_<br/><img src="https://github.com/user-attachments/assets/ccc270c2-ed0d-472e-b97b-9c454e14fd46" width="500" height="300" />
-   - ```setnx``` 명령어를 통해 분산Lock 구현
-   - 스핀락 방식
-- _**Redisson**_<br/>![image](https://github.com/user-attachments/assets/848cc373-3cb1-4400-8542-b13659050a08)
-   - pub-sub 기반으로 Lock 구현 제공
+### ⑤ [Redis] Lettuce 활용
+- MySQL의 Named Lock과 유사
+  - [차이점] Redis를 사용하며, 세션 관리에 신경쓰지 않아도 된다.
+- 재시도가 필요하지 않은 경우 활용
+- 장점
+  - 구현이 간단하다.
+  - spring data redis 이용 시, Lettuce가 기본이므로 별도 라이브러리를 사용하지 않아도 된다.
+- 단점
+  - 스핀락 방식이므로 동시에 많은 스레드가 Lock 획득-대기 상태라면, Redis에 부하가 될 수 있다.
+      - [극복] ```Thread.sleep()```을 통해 Lock의 획득-재시도 간 term을 둬야 함  
 
 <br/>
 
-### ⑤ [Redis] Lettuce 적용
+#### How to
+- Redis 환경 설정 방법은 [해당 글](https://github.com/bono039/TIL/blob/main/Redis/Redis.md) 참고
+
+<br/>
+
+1. cmd에서 ```docker ps``` 명령어 실행 후, Redis 컨테이너 id 복사하기
+
+![image](https://github.com/user-attachments/assets/e4b67f9e-333b-4e0f-890c-5bf39c51fad1)
 
 
 <br/>
+
+2. redis-cli 실행하기
+```bash
+$ docker exec -it 컨테이너ID redis-cli
+```
+
+![image](https://github.com/user-attachments/assets/1e5b09e4-5f4e-4666-b6e8-3aa9c0b36993)
+
+<br/>
+
+3. key가 1인 데이터를 ```setnx```하기
+- _처음에는 key가 1인 데이터가 없으므로 성공_
+- 기존에 있는 데이터라면 ```$ redis-cli FLUSHALL``` 명령어를 실행해 Redis 데이터 초기화 후 실행하기
+```bash
+$ setnx 1 lock
+```
+
+![image](https://github.com/user-attachments/assets/0fbc859f-661b-43dc-9831-f7035b4441f3)
+
+<br/>
+
+4. Redis 명령어를 사용하도록 Redis Repository를 생성한다. (```repository/RedisLockRepository.java```)
+```java
+package com.example.stock.repository;
+
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
+
+import java.time.Duration;
+
+@Component
+public class RedisLockRepository {
+
+    // ⚠️ Redis 명령어 사용하고자 레디스 템플릿 추가
+    private RedisTemplate<String, String> redisTemplate;
+
+    public RedisLockRepository(RedisTemplate<String, String> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
+    // Lock 메소드 (로직 실행 전 실행되며 lock 걺)
+    public Boolean lock(Long key) {
+        return redisTemplate
+                .opsForValue()
+                .setIfAbsent(generateKey(key), "lock", Duration.ofMillis(3_000));
+    }
+
+    // Unlock 메소드 (로직 끝나면 실행되며 lock 해제)
+    public Boolean unlock(Long key) {
+        return redisTemplate.delete(generateKey(key));
+    }
+
+    private String generateKey(Long key) {
+        return key.toString();
+    }
+}
+```
+
+<br/>
+
+5. 로직 실행 전후로 Lock 획득-해제를 해줘야 하므로 facade 클래스를 생성한다. (```facade/LettuceLockStockFacade.java```)
+```java
+package com.example.stock.facade;
+
+import com.example.stock.repository.RedisLockRepository;
+import com.example.stock.service.StockService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class LettuceLockStockFacade {
+
+    private final RedisLockRepository redisLockRepository;    // Redis 사용해 Lock 설정용
+    private final StockService stockService;  // 재고 감소용
+
+    // 생성자
+    public LettuceLockStockFacade(RedisLockRepository redisLockRepository, StockService stockService) {
+        this.redisLockRepository = redisLockRepository;
+        this.stockService = stockService;
+    }
+
+    public void decrease(Long id, Long quantity) throws InterruptedException {
+        while (!redisLockRepository.lock(id)) { // Lock 획득 시도
+            Thread.sleep(100);
+        }
+
+        try {
+            // Lock 획득 성공 시
+            stockService.decrease(id, quantity);
+        } finally {
+            // 로직 모두 종료 시, unlock 메소드 활용해 Lock 해제
+            redisLockRepository.unlock(id);
+        }
+    }
+}
+```
+
+<br/>
+
+6. 기존 테스트코드와 거의 유사하게 [테스트코드](https://github.com/bono039/stock/blob/main/src/test/java/com/example/stock/facade/LettuceLockStockFacadeTest.java)를 작성하고 실행한다. (```test/.../facade/LettuceLockStockFacadeTest.java```)
+
+<br/>
+
+### ⑥ [Redis] Redisson 활용
+- Lokc 획득 재시도를 기본으로 제공한다. (∴ _실무에서 재시도가 필요한 경우 활용_)
+   - 자신이 점유하고 있는 Lock 해제 시, 채널에 메시지를 보내줌으로써 Lock을 획득해야 하는 스레드들에게 Lock을 획득하라고 전달해준다
+   - 그럼 메시지 받은 스레드들은 lock 획득을 재시도하게 된다.
+- 장점
+   - pub-sub 이용해 Redis 부하를 줄일 수 있다.
+- 단점
+   - 구현이 조금 복잡하다.
+   - 별도의 라이브러리를 사용해야 한다.
+   - Lock을 라이브러리 차원에서 제공하므로 사용법을 배워야 한다.
+- vs ```Lettuce```
+   - ```Lettuce```는 계속 Lock을 시도하지만, ```Redisson```은 Lock 해제 시 한 번 or 몇 번만 시도하면서 Redis 부하를 줄인다.
+
+<br/>
+
+#### How to
+- Redisson은 Lock 관련 클래스들을 라이브러리에서 제공하므로 별도 레포지토리는 생성하지 않는다.
+- 하지만, 로직 실행 전후로 Lock 획득-해제가 필요하므로 ```facade 클래스```를 이용한다.
+
+
+<br/>
+
+1. [mvnrepository 사이트](https://mvnrepository.com/artifact/org.redisson/redisson-spring-boot-starter/3.35.0)에서 버전에 맞는 Redisson 라이브러리를 탐색한다.
+   
+![image](https://github.com/user-attachments/assets/5926c575-1c09-4216-8d54-e98dddef0467)
+
+
+<br/>
+
+2.```build.gradle``` 파일에 위에서 찾은 의존성을 추가한다.
+```gradle
+implementation 'org.redisson:redisson-spring-boot-starter:3.17.4'
+```
+
+<br/>
+
+3. 로직 실행 전후로 Lock 획득-해제가 필요하므로 facade 클래스를 이용한다. (```facade/RedissonLockStockFacade.java```)
+```java
+package com.example.stock.facade;
+
+import com.example.stock.service.StockService;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.springframework.stereotype.Component;
+
+import java.util.concurrent.TimeUnit;
+
+@Component
+public class RedissonLockStockFacade {
+
+    private RedissonClient redissonClient;  // Lock 획득용 (Redisson 라이브러리 덕에 Repository 따로 안 만들어도 됨)
+    private StockService stockService;  // 재고 감소용
+
+    public RedissonLockStockFacade(RedissonClient redissonClient, StockService stockService) {
+        this.redissonClient = redissonClient;
+        this.stockService = stockService;
+    }
+
+    // 재고 감소 로직
+    public void decrease(Long id, Long quantity) {
+        RLock lock = redissonClient.getLock(id.toString());   // Lock 객체 가져오기
+
+        try {
+            boolean available = lock.tryLock(10, 1, TimeUnit.SECONDS);
+
+            // 몇 초 동안 lock 획득하고 점유할 것인지 설정하기
+            if(!available) {
+                System.out.println("lock 획득 실패");
+                return;
+            }
+
+            // 정상적으로 Lock 획득한 경우
+            stockService.decrease(id, quantity);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            // 로직 모두 정상적으로 종료되면, Lock 해제하기
+            lock.unlock();
+        }
+    }
+}
+```
+
+<br/>
+
+4. 기존 테스트코드와 거의 유사하게 [테스트코드](https://github.com/bono039/stock/blob/main/src/test/java/com/example/stock/facade/RedissonLockStockFacadeTest.java)를 작성하고 실행한다. (```test/.../facade/RedissonLockStockFacadeTest.java```)
+- [주의] TC 실행 시 ```org.opentest4j.AssertionFailedError```가 발생하는 경우, ```$ redis-cli FLUSHALL``` 명령어를 실행해 Redis 데이터 초기화 후 실행하기
+
+<br/>
+
 
 ## 🔗 참고
 * https://www.inflearn.com/course/%EB%8F%99%EC%8B%9C%EC%84%B1%EC%9D%B4%EC%8A%88-%EC%9E%AC%EA%B3%A0%EC%8B%9C%EC%8A%A4%ED%85%9C/news
