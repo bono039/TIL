@@ -14,7 +14,8 @@
 ## 정의
 > 테이블에 대한 데이터 검색 속도를 높이고자 생성하며 컬럼에 적용
 - <code>인덱스-데이터 레코드</code>쌍으로 구성
-![image](https://github.com/bono039/TIL/assets/67899934/510f4df6-0538-47de-b6f2-94786beb9ffb)
+<img src="https://github.com/bono039/TIL/assets/67899934/510f4df6-0538-47de-b6f2-94786beb9ffb" width="700" height="300">
+
 *출처 : 데이터베이스 배움터
 
 <br/>
@@ -36,7 +37,7 @@
 <br/>
 
 ## 장단점
-### 장점
+### 단점
 - 인덱싱에 따른 오버헤드 발생
    * 인덱스를 위한 메모리 추가 소모
    * 데이터 수정,삭제 시 인덱스까지 수정해야 함
@@ -65,10 +66,10 @@
 <br/>
 
 ### 비트맵 인덱스
-<code>
-  CREATE BITMAP INDEX 인덱스명 ON 테이블명(컬럼)
-  [TABLESPACE 테이블 스페이스명]
-</code>
+```MySQL
+CREATE BITMAP INDEX 인덱스명 ON 테이블명(컬럼)
+[TABLESPACE 테이블 스페이스명]
+```
   
 - 비트맵(0과 1)로 인덱스 관리
 - 비트 이용해 컬럼값을 저장하고, ROWID 자동 생성
