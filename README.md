@@ -52,7 +52,7 @@
 <br/>
 
 ## DATABASE
-* 인덱스
+* [인덱스](https://github.com/bono039/TIL/blob/main/Database/index.md)
 * SELF JOIN
 
 <br/>
