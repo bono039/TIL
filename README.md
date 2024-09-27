@@ -48,7 +48,7 @@
 
 ## WEB
 * [세션 vs 쿠키 vs 토큰 vs 캐시](https://github.com/bono039/TIL/blob/main/Web/sessionCookieToken.md)
-* 웹 서버 vs WAS
+* [웹 서버 vs WAS](https://github.com/bono039/TIL/blob/main/Web/webVSwas.md)
 
 <br/>
 
