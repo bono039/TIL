@@ -81,4 +81,4 @@
 <br/>
 
 ## Redis
-* Redis 정의 및 작업환경 세팅
+* [Redis 정의 및 작업환경 세팅](https://github.com/bono039/TIL/blob/main/Redis/Redis.md)
