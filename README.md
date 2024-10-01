@@ -1,5 +1,5 @@
 # TIL
-- 학습한 내용 및 개발 관련 경험을 정리하는 저장소입니다✏️
+- 학습한 내용 및 개발 관련 경험을 정리하는 저장소입니다.✏️
 - [cheese10yun](https://github.com/cheese10yun/TIL/tree/master)님, [binghe819](https://github.com/binghe819/TIL?tab=readme-ov-file)님, [namjunemy](https://github.com/namjunemy/TIL/tree/master?tab=readme-ov-file)님의 TIL을 참조했습니다.
 <br/>
 
